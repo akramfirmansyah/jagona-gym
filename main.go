@@ -18,6 +18,10 @@ func init() {
 func main() {
 	app := fiber.New()
 
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Jagona Gym Project")
+	})
+
 	api := app.Group("/api")
 	api.Get("/user", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
