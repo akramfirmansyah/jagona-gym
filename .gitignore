@@ -1,0 +1,7 @@
+# File yang akan di-exclude dari tracking oleh git
+.env
+.air.toml
+
+# Folder yang akan di-exclude
+.idea/
+tmp/
