@@ -37,5 +37,12 @@ func main() {
 	api.Put("/trainer/:id", controller.UpdateTrainer)
 	api.Delete("/trainer/:id", controller.DeleteTrainer)
 
+	// Member
+	api.Post("/member", controller.CreateMember)
+	api.Get("/member", controller.GetAllMember)
+	api.Get("/member/:id", controller.GetMember)
+	api.Put("/member/:id", controller.UpdateMember)
+	api.Delete("/member/:id", controller.DeleteMember)
+
 	_ = app.Listen(":" + os.Getenv("PORT"))
 }
