@@ -19,7 +19,7 @@ func CreateTrainer(c *fiber.Ctx) error {
 	database.DB.Create(&body)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Success create new user!",
+		"message": "Success create new Trainer!",
 		"data":    body,
 	})
 }
@@ -66,17 +66,24 @@ func UpdateTrainer(c *fiber.Ctx) error {
 	}
 
 	trainer := models.Trainer{
-		Name:        body.Name,
-		Email:       body.Email,
-		PhoneNumber: body.PhoneNumber,
-		ImgURL:      body.ImgURL,
+		TrainerName:     body.TrainerName,
+		TrainerNIK:      body.TrainerNIK,
+		TrainerBirthday: body.TrainerBirthday,
+		TrainerEmail:    body.TrainerEmail,
+		TrainerContact:  body.TrainerContact,
+		TrainerAddress:  body.TrainerAddress,
+		TrainerGender:   body.TrainerGender,
 	}
 
 	database.DB.Model(models.Trainer{}).Where("id = ?", id).Updates(&trainer)
 
+	var result models.Trainer
+
+	database.DB.Model(&models.Trainer{}).Where("id = ?", id).First(&result)
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Success!",
-		"data":    trainer,
+		"data":    result,
 	})
 }
 
