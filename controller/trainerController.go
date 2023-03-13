@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"errors"
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 func CreateTrainer(c *fiber.Ctx) error {
@@ -16,7 +18,15 @@ func CreateTrainer(c *fiber.Ctx) error {
 		})
 	}
 
-	database.DB.Create(&body)
+	var existing models.Trainer
+	if err := database.DB.Where(&body).Preload("Members").First(&existing).Error; err != nil {
+		database.DB.Create(&body)
+	} else {
+		return c.JSON(fiber.Map{
+			"message": "Data already exist",
+			"data":    existing,
+		})
+	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Success create new Trainer!",
@@ -25,33 +35,34 @@ func CreateTrainer(c *fiber.Ctx) error {
 }
 
 func GetAllTrainer(c *fiber.Ctx) error {
-	var result []models.Trainer
+	var data []models.Trainer
 
-	hasil := database.DB.Find(&result)
+	result := database.DB.Preload("Members").Find(&data)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Data not Found!",
+		})
+	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Success!",
-		"data":    result,
-		"total":   hasil.RowsAffected,
+		"data":   data,
+		"result": result.RowsAffected,
 	})
 }
 
 func GetTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
-
 	var data models.Trainer
 
-	result := database.DB.Where("id = ?", id).First(&data)
+	result := database.DB.Where("id = ?", id).Preload("Members").First(&data)
 
-	if result.RowsAffected == 0 {
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Data not Found!",
 		})
 	}
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Success!",
-		"data":    data,
-	})
+	return c.Status(fiber.StatusOK).JSON(data)
 }
 
 func UpdateTrainer(c *fiber.Ctx) error {
@@ -59,9 +70,8 @@ func UpdateTrainer(c *fiber.Ctx) error {
 
 	body := new(models.Trainer)
 	if err := c.BodyParser(body); err != nil {
-		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+		return c.JSON(fiber.Map{
 			"message": err.Error(),
-			"data":    nil,
 		})
 	}
 
@@ -74,29 +84,34 @@ func UpdateTrainer(c *fiber.Ctx) error {
 		TrainerAddress:  body.TrainerAddress,
 		TrainerGender:   body.TrainerGender,
 	}
+	var data models.Trainer
+	result := database.DB.Where("id = ?", id).Preload("Members").First(&data)
 
-	database.DB.Model(models.Trainer{}).Where("id = ?", id).Updates(&trainer)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		database.DB.Model(&models.Trainer{}).Where("id = ?", id).Updates(&trainer)
+	} else {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Data not Found!",
+		})
+	}
+	database.DB.Model(&models.Trainer{}).Where("id = ?", id).Preload("Members").First(&data)
 
-	var result models.Trainer
-
-	database.DB.Model(&models.Trainer{}).Where("id = ?", id).First(&result)
-
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Success!",
-		"data":    result,
-	})
+	return c.Status(fiber.StatusOK).JSON(data)
 }
 
 func DeleteTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	result := database.DB.Delete(&models.Trainer{}, id)
+	var trainer models.Trainer
 
-	if result.RowsAffected == 0 {
+	result := database.DB.First(&trainer, id)
+
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Data not Found!",
 		})
 	}
+	database.DB.Delete(&trainer, id)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Success Delete Trainer Data",
