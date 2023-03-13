@@ -2,10 +2,16 @@ package models
 
 import "gorm.io/gorm"
 
+// To Do
+// Trainer Description (Experience / Certificate)
+
 type Trainer struct {
 	gorm.Model
-	Name        string `json:"trainer_name"`
-	Email       string `json:"trainer_email"`
-	PhoneNumber string `json:"phone_number"`
-	ImgURL      string `json:"image_url"`
+	TrainerName     string `gorm:"index" json:"trainer_name"`
+	TrainerNIK      uint   `json:"trainer_nik"`
+	TrainerBirthday string `json:"trainer_birthday"`
+	TrainerEmail    string `json:"trainer_email"`
+	TrainerContact  string `gorm:"default:-" json:"trainer_contact"`
+	TrainerAddress  string `json:"trainer_address"`
+	TrainerGender   string `json:"trainer_gender"`
 }
