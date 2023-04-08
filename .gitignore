@@ -1,5 +1,6 @@
 .env
 .air.toml
+public/trainer/*
 
 .idea/
 tmp/

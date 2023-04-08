@@ -62,48 +62,52 @@ definitions:
     type: object
   models.Trainer:
     properties:
+      address:
+        type: string
+      birthday:
+        type: string
+      contact:
+        type: string
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      gender:
+        type: string
       id:
         type: integer
+      img_url:
+        type: string
       members:
         items:
           $ref: '#/definitions/models.Member'
         type: array
-      trainer_address:
+      name:
         type: string
-      trainer_birthday:
-        type: string
-      trainer_contact:
-        type: string
-      trainer_email:
-        type: string
-      trainer_gender:
-        type: string
-      trainer_name:
-        type: string
-      trainer_nik:
+      nik:
         type: integer
       updatedAt:
         type: string
     type: object
   models.TrainerBody:
     properties:
-      trainer_address:
+      address:
         type: string
-      trainer_birthday:
+      birthday:
         type: string
-      trainer_contact:
+      contact:
         type: string
-      trainer_email:
+      email:
         type: string
-      trainer_gender:
+      gender:
         type: string
-      trainer_name:
+      image:
         type: string
-      trainer_nik:
+      name:
+        type: string
+      nik:
         type: integer
     type: object
 host: localhost:8080
@@ -111,15 +115,34 @@ info:
   contact:
     email: akram.firman@gmail.com
     name: API Support
-  description: This is a sample swagger for Jagona Gym API
+  description: This is a swagger for Jagona Gym API
   title: Jagona Gym API
-  version: "1.0"
+  version: 0.0.1
 paths:
   /api/member:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Member'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all members
+      tags:
+      - Member
     post:
       consumes:
       - application/json
-      description: Creating new member data
+      description: Creating new Member data
       parameters:
       - description: Data member
         in: body
@@ -133,22 +156,111 @@ paths:
         "200":
           description: Success create member
           schema:
-            items:
-              $ref: '#/definitions/models.Member'
-            type: array
+            $ref: '#/definitions/models.Member'
         "400":
-          description: ok
-          schema:
-            type: string
-        "404":
-          description: ok
+          description: Bad Request
           schema:
             type: string
         "500":
-          description: ok
+          description: Internal Server Error
           schema:
             type: string
       summary: Create Member
+      tags:
+      - Member
+  /api/member/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Member data by id
+      parameters:
+      - description: Member ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Delete Member Data
+          schema:
+            type: string
+        "404":
+          description: Data not Found!
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete Member
+      tags:
+      - Member
+    get:
+      consumes:
+      - application/json
+      description: Get a single Member data by ID
+      parameters:
+      - description: Member ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Member'
+        "404":
+          description: Member not found
+          schema:
+            type: string
+        "500":
+          description: Failed to get trainer
+          schema:
+            type: string
+      summary: Get a single Member
+      tags:
+      - Member
+    put:
+      consumes:
+      - application/json
+      description: Update a specific Member data
+      parameters:
+      - description: Member ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Member data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.MemberBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Member'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Member not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update Member
       tags:
       - Member
   /api/trainer:
@@ -173,15 +285,49 @@ paths:
       - Trainer
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Creating new Trainer data
       parameters:
-      - description: Data trainer
-        in: body
-        name: body
+      - description: Name trainer
+        in: formData
+        name: name
         required: true
-        schema:
-          $ref: '#/definitions/models.TrainerBody'
+        type: string
+      - description: NIK trainer
+        in: formData
+        name: nik
+        required: true
+        type: string
+      - description: Tanggal Lahir trainer
+        in: formData
+        name: birthday
+        required: true
+        type: string
+      - description: Email trainer
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Kontak trainer
+        in: formData
+        name: contact
+        required: true
+        type: string
+      - description: Alamat trainer
+        in: formData
+        name: address
+        required: true
+        type: string
+      - description: Gender trainer
+        in: formData
+        name: gender
+        required: true
+        type: string
+      - description: Image trainer
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:

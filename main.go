@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/akramfirmansyah/jagona-gym/controller"
+	"github.com/akramfirmansyah/jagona-gym/routers"
 	"github.com/gofiber/swagger"
 
 	"github.com/akramfirmansyah/jagona-gym/database"
@@ -24,8 +24,8 @@ func init() {
 }
 
 //	@title			Jagona Gym API
-//	@version		1.0
-//	@description	This is a sample swagger for Jagona Gym API
+//	@version		0.0.1
+//	@description	This is a swagger for Jagona Gym API
 //	@contact.name	API Support
 //	@contact.email	akram.firman@gmail.com
 //	@host			localhost:8080
@@ -39,6 +39,7 @@ func main() {
 
 	app.Use(logger.New())
 	app.Use(cors.New())
+	app.Static("/images", "./public")
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Jagona Gym Project")
@@ -49,18 +50,10 @@ func main() {
 	api := app.Group("/api")
 
 	// Trainer
-	api.Post("/trainer", controller.CreateTrainer)
-	api.Get("/trainer", controller.GetAllTrainer)
-	api.Get("/trainer/:id", controller.GetTrainer)
-	api.Put("/trainer/:id", controller.UpdateTrainer)
-	api.Delete("/trainer/:id", controller.DeleteTrainer)
+	routers.RegisterTrainerRoutes(api.Group("/trainer"))
 
 	// Member
-	api.Post("/member", controller.CreateMember)
-	api.Get("/member", controller.GetAllMember)
-	api.Get("/member/:id", controller.GetMember)
-	api.Put("/member/:id", controller.UpdateMember)
-	api.Delete("/member/:id", controller.DeleteMember)
+	routers.RegisterMemberRoutes(api.Group("/member"))
 
 	_ = app.Listen(":" + os.Getenv("PORT"))
 }
