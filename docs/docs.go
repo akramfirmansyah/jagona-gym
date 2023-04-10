@@ -405,7 +405,7 @@ const docTemplate = `{
             "put": {
                 "description": "Update a specific Trainer data",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -423,13 +423,60 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Update Trainer data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.TrainerBody"
-                        }
+                        "type": "string",
+                        "description": "Name trainer",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "NIK trainer",
+                        "name": "nik",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tanggal Lahir trainer",
+                        "name": "birthday",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email trainer",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Kontak trainer",
+                        "name": "contact",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Alamat trainer",
+                        "name": "address",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Gender trainer",
+                        "name": "gender",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image trainer",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -519,38 +566,35 @@ const docTemplate = `{
         "models.Member": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "type": "string"
                 },
                 "deletedAt": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
-                "member_address": {
+                "name": {
                     "type": "string"
                 },
-                "member_contact": {
-                    "type": "string"
-                },
-                "member_email": {
-                    "type": "string"
-                },
-                "member_gender": {
-                    "type": "string"
-                },
-                "member_name": {
-                    "type": "string"
-                },
-                "member_nik": {
+                "nik": {
                     "type": "integer"
                 },
-                "member_package": {
+                "package": {
                     "type": "string"
-                },
-                "member_wight": {
-                    "type": "integer"
                 },
                 "trainer": {
                     "$ref": "#/definitions/models.Trainer"
@@ -560,37 +604,40 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "wight": {
+                    "type": "integer"
                 }
             }
         },
         "models.MemberBody": {
             "type": "object",
             "properties": {
-                "member_address": {
+                "address": {
                     "type": "string"
                 },
-                "member_contact": {
+                "contact": {
                     "type": "string"
                 },
-                "member_email": {
+                "email": {
                     "type": "string"
                 },
-                "member_gender": {
+                "gender": {
                     "type": "string"
                 },
-                "member_name": {
+                "name": {
                     "type": "string"
                 },
-                "member_nik": {
+                "nik": {
                     "type": "integer"
                 },
-                "member_package": {
+                "package": {
                     "type": "string"
-                },
-                "member_wight": {
-                    "type": "integer"
                 },
                 "trainer_id": {
+                    "type": "integer"
+                },
+                "wight": {
                     "type": "integer"
                 }
             }
@@ -639,35 +686,6 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
-                }
-            }
-        },
-        "models.TrainerBody": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "birthday": {
-                    "type": "string"
-                },
-                "contact": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "nik": {
-                    "type": "integer"
                 }
             }
         }

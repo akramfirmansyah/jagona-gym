@@ -32,18 +32,17 @@ func CreateMember(c *fiber.Ctx) error {
 	}
 
 	member := models.Member{
-		MemberName:    body.MemberName,
-		MemberNIK:     body.MemberNIK,
-		MemberContact: body.MemberContact,
-		MemberEmail:   body.MemberEmail,
-		MemberAddress: body.MemberAddress,
-		MemberGender:  body.MemberGender,
-		MemberWight:   body.MemberWight,
-		MemberPackage: body.MemberPackage,
-		TrainerID:     body.TrainerID,
+		Name:      body.Name,
+		NIK:       body.NIK,
+		Contact:   body.Contact,
+		Email:     body.Email,
+		Address:   body.Address,
+		Gender:    body.Gender,
+		Wight:     body.Wight,
+		Package:   body.Package,
+		TrainerID: body.TrainerID,
 	}
 
-	
 	if err := database.DB.Create(&member).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to create member",
@@ -88,7 +87,7 @@ func GetAllMember(c *fiber.Ctx) error {
 //	@Router			/api/member/{id} [get]
 func GetMember(c *fiber.Ctx) error {
 	id := c.Params("id")
-	
+
 	var member models.Member
 	if err := database.DB.Preload("Trainer").Where("id = ?", id).First(&member).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -137,15 +136,14 @@ func UpdateMember(c *fiber.Ctx) error {
 		})
 	}
 
-	
-	member.MemberName = body.MemberName
-	member.MemberNIK = body.MemberNIK
-	member.MemberContact = body.MemberContact
-	member.MemberEmail = body.MemberEmail
-	member.MemberAddress = body.MemberAddress
-	member.MemberGender = body.MemberGender
-	member.MemberWight = body.MemberWight
-	member.MemberPackage = body.MemberPackage
+	member.Name = body.Name
+	member.NIK = body.NIK
+	member.Contact = body.Contact
+	member.Email = body.Email
+	member.Address = body.Address
+	member.Gender = body.Gender
+	member.Wight = body.Wight
+	member.Package = body.Package
 	member.TrainerID = body.TrainerID
 
 	if err := database.DB.Model(&member).Updates(&member).Error; err != nil {

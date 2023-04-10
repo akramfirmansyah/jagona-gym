@@ -131,14 +131,23 @@ func GetTrainer(c *fiber.Ctx) error {
 //	@Summary		Update Trainer
 //	@Description	Update a specific Trainer data
 //	@Tags			Trainer
-//	@Accept			json
+//	@Accept			mpfd
 //	@Produce		json
-//	@Param			id		path		int					true	"Trainer ID"
-//	@Param			body	body		models.TrainerBody	true	"Update Trainer data"
-//	@Success		200		{object}	models.Trainer
-//	@Failure		400		{string}	string	"Bad Request"
-//	@Failure		404		{string}	string	"Trainer not found"
-//	@Failure		500		{string}	string	"Internal Server Error"
+//
+//	@Param			id			path		int		true	"Trainer ID"
+//	@Param			name		formData	string	true	"Name trainer"
+//	@Param			nik			formData	string	true	"NIK trainer"
+//	@Param			birthday	formData	string	true	"Tanggal Lahir trainer"
+//	@Param			email		formData	string	true	"Email trainer"
+//	@Param			contact		formData	string	true	"Kontak trainer"
+//	@Param			address		formData	string	true	"Alamat trainer"
+//	@Param			gender		formData	string	true	"Gender trainer"
+//	@Param			image		formData	file	true	"Image trainer"
+//
+//	@Success		200			{object}	models.Trainer
+//	@Failure		400			{string}	string	"Bad Request"
+//	@Failure		404			{string}	string	"Trainer not found"
+//	@Failure		500			{string}	string	"Internal Server Error"
 //	@Router			/api/trainer/{id} [put]
 func UpdateTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")

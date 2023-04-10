@@ -10,54 +10,54 @@ definitions:
     type: object
   models.Member:
     properties:
+      address:
+        type: string
+      contact:
+        type: string
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      gender:
+        type: string
       id:
         type: integer
-      member_address:
+      name:
         type: string
-      member_contact:
-        type: string
-      member_email:
-        type: string
-      member_gender:
-        type: string
-      member_name:
-        type: string
-      member_nik:
+      nik:
         type: integer
-      member_package:
+      package:
         type: string
-      member_wight:
-        type: integer
       trainer:
         $ref: '#/definitions/models.Trainer'
       trainer_id:
         type: integer
       updatedAt:
         type: string
+      wight:
+        type: integer
     type: object
   models.MemberBody:
     properties:
-      member_address:
+      address:
         type: string
-      member_contact:
+      contact:
         type: string
-      member_email:
+      email:
         type: string
-      member_gender:
+      gender:
         type: string
-      member_name:
+      name:
         type: string
-      member_nik:
+      nik:
         type: integer
-      member_package:
+      package:
         type: string
-      member_wight:
-        type: integer
       trainer_id:
+        type: integer
+      wight:
         type: integer
     type: object
   models.Trainer:
@@ -90,25 +90,6 @@ definitions:
         type: integer
       updatedAt:
         type: string
-    type: object
-  models.TrainerBody:
-    properties:
-      address:
-        type: string
-      birthday:
-        type: string
-      contact:
-        type: string
-      email:
-        type: string
-      gender:
-        type: string
-      image:
-        type: string
-      name:
-        type: string
-      nik:
-        type: integer
     type: object
 host: localhost:8080
 info:
@@ -405,7 +386,7 @@ paths:
       - Trainer
     put:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Update a specific Trainer data
       parameters:
       - description: Trainer ID
@@ -413,12 +394,46 @@ paths:
         name: id
         required: true
         type: integer
-      - description: Update Trainer data
-        in: body
-        name: body
+      - description: Name trainer
+        in: formData
+        name: name
         required: true
-        schema:
-          $ref: '#/definitions/models.TrainerBody'
+        type: string
+      - description: NIK trainer
+        in: formData
+        name: nik
+        required: true
+        type: string
+      - description: Tanggal Lahir trainer
+        in: formData
+        name: birthday
+        required: true
+        type: string
+      - description: Email trainer
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Kontak trainer
+        in: formData
+        name: contact
+        required: true
+        type: string
+      - description: Alamat trainer
+        in: formData
+        name: address
+        required: true
+        type: string
+      - description: Gender trainer
+        in: formData
+        name: gender
+        required: true
+        type: string
+      - description: Image trainer
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
