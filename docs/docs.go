@@ -288,7 +288,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "NIK trainer",
                         "name": "nik",
                         "in": "formData",
@@ -317,6 +317,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "Instagram trainer",
+                        "name": "instagram",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
                         "description": "Alamat trainer",
                         "name": "address",
                         "in": "formData",
@@ -328,6 +334,31 @@ const docTemplate = `{
                         "name": "gender",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deskripsi singkat trainer",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pengalaman trainer",
+                        "name": "experience",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Spesialisasi trainer",
+                        "name": "specialization",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pencapaian/Sertifikasi/Lisensi trainer",
+                        "name": "achievement",
+                        "in": "formData"
                     },
                     {
                         "type": "file",
@@ -426,57 +457,79 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Name trainer",
                         "name": "name",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "NIK trainer",
                         "name": "nik",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "Tanggal Lahir trainer",
                         "name": "birthday",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "Email trainer",
                         "name": "email",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "Kontak trainer",
                         "name": "contact",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Instagram trainer",
+                        "name": "instagram",
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "Alamat trainer",
                         "name": "address",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "description": "Gender trainer",
                         "name": "gender",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deskripsi singkat trainer",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pengalaman trainer",
+                        "name": "experience",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Spesialisasi trainer",
+                        "name": "specialization",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pencapaian/Sertifikasi/Lisensi trainer",
+                        "name": "achievement",
+                        "in": "formData"
                     },
                     {
                         "type": "file",
                         "description": "Image trainer",
                         "name": "image",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -569,85 +622,6 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
-                "contact": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "deletedAt": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "nik": {
-                    "type": "integer"
-                },
-                "package": {
-                    "type": "string"
-                },
-                "trainer": {
-                    "$ref": "#/definitions/models.Trainer"
-                },
-                "trainer_id": {
-                    "type": "integer"
-                },
-                "updatedAt": {
-                    "type": "string"
-                },
-                "wight": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.MemberBody": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "contact": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "nik": {
-                    "type": "integer"
-                },
-                "package": {
-                    "type": "string"
-                },
-                "trainer_id": {
-                    "type": "integer"
-                },
-                "wight": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.Trainer": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
                 "birthday": {
                     "type": "string"
                 },
@@ -669,7 +643,110 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "instagram": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "integer"
+                },
+                "package": {
+                    "type": "string"
+                },
+                "trainer": {
+                    "$ref": "#/definitions/models.Trainer"
+                },
+                "trainer_id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.MemberBody": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "instagram": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "integer"
+                },
+                "package": {
+                    "type": "string"
+                },
+                "trainer_id": {
+                    "type": "integer"
+                },
+                "weight": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Trainer": {
+            "type": "object",
+            "properties": {
+                "achievement": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "experience": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
                 "img_url": {
+                    "type": "string"
+                },
+                "instagram": {
                     "type": "string"
                 },
                 "members": {
@@ -683,6 +760,9 @@ const docTemplate = `{
                 },
                 "nik": {
                     "type": "integer"
+                },
+                "specialization": {
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"

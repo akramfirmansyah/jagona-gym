@@ -38,7 +38,7 @@ func CreateMember(c *fiber.Ctx) error {
 		Email:     body.Email,
 		Address:   body.Address,
 		Gender:    body.Gender,
-		Wight:     body.Wight,
+		Weight:    body.Weight,
 		Package:   body.Package,
 		TrainerID: body.TrainerID,
 	}
@@ -142,7 +142,7 @@ func UpdateMember(c *fiber.Ctx) error {
 	member.Email = body.Email
 	member.Address = body.Address
 	member.Gender = body.Gender
-	member.Wight = body.Wight
+	member.Weight = body.Weight
 	member.Package = body.Package
 	member.TrainerID = body.TrainerID
 

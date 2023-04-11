@@ -1,29 +1,37 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Member struct {
 	gorm.Model
-	Name      string  `gorm:"index" json:"name"`
-	NIK       uint    `json:"nik"`
-	Contact   string  `json:"contact"`
-	Email     string  `gorm:"uniqueIndex;size:256" json:"email"`
-	Address   string  `json:"address"`
-	Gender    string  `json:"gender"`
-	Wight     uint16  `gorm:"index;default:0" json:"wight"`
-	Package   string  `json:"package"`
-	TrainerID uint    `json:"trainer_id"`
-	Trainer   Trainer `gorm:"foreignKey:TrainerID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"trainer"`
+	Name      string    `gorm:"index;size:255" json:"name"`
+	NIK       uint      `json:"nik"`
+	Birthday  time.Time `gorm:"type:date" json:"birthday"`
+	Email     string    `gorm:"uniqueIndex;size:255" json:"email"`
+	Contact   string    `gorm:"size:50" json:"contact"`
+	Instagram string    `gorm:"size:255" json:"instagram"`
+	Address   string    `gorm:"size:255" json:"address"`
+	Gender    string    `gorm:"type:enum('male','female')" json:"gender"`
+	Weight    uint16    `gorm:"index;default:0" json:"weight"`
+	Package   string    `gorm:"size:50" json:"package"`
+	TrainerID uint      `json:"trainer_id"`
+	Trainer   Trainer   `gorm:"foreignKey:TrainerID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"trainer"`
 }
 
 type MemberBody struct {
-	Name      string `json:"name"`
-	NIK       uint   `json:"nik"`
-	Contact   string `json:"contact"`
-	Email     string `json:"email"`
-	Address   string `json:"address"`
-	Gender    string `json:"gender"`
-	Wight     uint16 `json:"wight"`
-	Package   string `json:"package"`
-	TrainerID uint   `json:"trainer_id"`
+	Name      string    `json:"name"`
+	NIK       uint      `json:"nik"`
+	Birthday  time.Time `json:"birthday"`
+	Email     string    `json:"email"`
+	Contact   string    `json:"contact"`
+	Instagram string    `json:"instagram"`
+	Address   string    `json:"address"`
+	Gender    string    `json:"gender"`
+	Weight    uint16    `json:"weight"`
+	Package   string    `json:"package"`
+	TrainerID uint      `json:"trainer_id"`
 }
