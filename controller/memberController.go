@@ -9,6 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: fix member Create and Update Controller
+
 // Member godoc
 //
 //	@Summary		Create Member

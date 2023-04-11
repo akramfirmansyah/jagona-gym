@@ -11,12 +11,12 @@ type Member struct {
 	Name      string    `gorm:"index;size:255" json:"name"`
 	NIK       uint      `json:"nik"`
 	Birthday  time.Time `gorm:"type:date" json:"birthday"`
-	Email     string    `gorm:"uniqueIndex;size:255" json:"email"`
+	Email     string    `gorm:"Index;size:255" json:"email"`
 	Contact   string    `gorm:"size:50" json:"contact"`
 	Instagram string    `gorm:"size:255" json:"instagram"`
 	Address   string    `gorm:"size:255" json:"address"`
 	Gender    string    `gorm:"type:enum('male','female')" json:"gender"`
-	Weight    uint16    `gorm:"index;default:0" json:"weight"`
+	Weight    uint16    `gorm:"default:0" json:"weight"`
 	Package   string    `gorm:"size:50" json:"package"`
 	TrainerID uint      `json:"trainer_id"`
 	Trainer   Trainer   `gorm:"foreignKey:TrainerID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL" json:"trainer"`

@@ -52,12 +52,8 @@ func CreateTrainer(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
-	// Generate unique filename
-	ext := filepath.Ext(file.Filename)
-	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
-
-	// Save file to disk
-	if err := c.SaveFile(file, fmt.Sprintf("public/trainer/%s", filename)); err != nil {
+	path, err := utils.SaveFileTrainer(c, file)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
@@ -76,7 +72,7 @@ func CreateTrainer(c *fiber.Ctx) error {
 		Instagram:      body.Instagram,
 		Address:        body.Address,
 		Gender:         body.Gender,
-		Image:          fmt.Sprintf("%s/images/trainer/%s", os.Getenv("BASE_URL"), filename),
+		Image:          path,
 		Description:    body.Description,
 		Experience:     body.Experience,
 		Specialization: body.Specialization,

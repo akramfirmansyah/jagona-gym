@@ -11,7 +11,7 @@ type Trainer struct {
 	Name           string    `gorm:"index;size:255" json:"name"`
 	NIK            uint      `json:"nik"`
 	Birthday       time.Time `gorm:"type:date" json:"birthday"`
-	Email          string    `gorm:"uniqueIndex;size:255" json:"email"`
+	Email          string    `gorm:"index;size:255" json:"email"`
 	Contact        string    `gorm:"size:50" json:"contact"`
 	Instagram      string    `gorm:"size:255" json:"instagram"`
 	Address        string    `gorm:"size:255" json:"address"`
