@@ -2,10 +2,6 @@ package controller
 
 import (
 	"errors"
-	"fmt"
-	"os"
-	"path/filepath"
-	"time"
 
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
@@ -44,23 +40,31 @@ func CreateTrainer(c *fiber.Ctx) error {
 	body := new(models.TrainerBody)
 
 	if err := c.BodyParser(body); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	file, err := c.FormFile("image")
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	path, err := utils.SaveFileTrainer(c, file)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	// Parse time
 	birthday, err := utils.ParseTime(body.Birthday)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	newTrainer := models.Trainer{
@@ -119,7 +123,7 @@ func GetAllTrainer(c *fiber.Ctx) error {
 //	@Param			id	path		int	true	"Trainer ID"
 //	@Success		200	{object}	models.Trainer
 //	@Failure		404	{string}	string	"Trainer not found"
-//	@Failure		500	{string}	string	"Failed to get trainer"
+//	@Failure		500	{string}	string	"Internal Server Error"
 //	@Router			/api/trainer/{id} [get]
 func GetTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -148,18 +152,18 @@ func GetTrainer(c *fiber.Ctx) error {
 //	@Produce		json
 //
 //	@Param			id				path		int		true	"Trainer ID"
-//	@Param			name			formData	string	false	"Name trainer"
-//	@Param			nik				formData	integer	false	"NIK trainer"
-//	@Param			birthday		formData	string	false	"Tanggal Lahir trainer"
-//	@Param			email			formData	string	false	"Email trainer"
-//	@Param			contact			formData	string	false	"Kontak trainer"
-//	@Param			instagram		formData	string	false	"Instagram trainer"
-//	@Param			address			formData	string	false	"Alamat trainer"
-//	@Param			gender			formData	string	false	"Gender trainer"
-//	@Param			description		formData	string	false	"Deskripsi singkat trainer"
-//	@Param			experience		formData	string	false	"Pengalaman trainer"
-//	@Param			specialization	formData	string	false	"Spesialisasi trainer"
-//	@Param			achievement		formData	string	false	"Pencapaian/Sertifikasi/Lisensi trainer"
+//	@Param			name			formData	string	true	"Name trainer"
+//	@Param			nik				formData	integer	true	"NIK trainer"
+//	@Param			birthday		formData	string	true	"Tanggal Lahir trainer"
+//	@Param			email			formData	string	true	"Email trainer"
+//	@Param			contact			formData	string	true	"Kontak trainer"
+//	@Param			instagram		formData	string	true	"Instagram trainer"
+//	@Param			address			formData	string	true	"Alamat trainer"
+//	@Param			gender			formData	string	true	"Gender trainer"
+//	@Param			description		formData	string	true	"Deskripsi singkat trainer"
+//	@Param			experience		formData	string	true	"Pengalaman trainer"
+//	@Param			specialization	formData	string	true	"Spesialisasi trainer"
+//	@Param			achievement		formData	string	true	"Pencapaian/Sertifikasi/Lisensi trainer"
 //	@Param			image			formData	file	false	"Image trainer"
 //
 //	@Success		200				{object}	models.Trainer
@@ -188,22 +192,22 @@ func UpdateTrainer(c *fiber.Ctx) error {
 
 	file, err := c.FormFile("image")
 	if file != nil && err == nil {
-		// Generate unique filename
-		ext := filepath.Ext(file.Filename)
-		filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
-
-		// Save file to disk
-		if err := c.SaveFile(file, fmt.Sprintf("public/trainer/%s", filename)); err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		path, err := utils.SaveFileTrainer(c, file)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Failed to save image to Server!",
+			})
 		}
 
-		trainer.Image = fmt.Sprintf("%s/images/trainer/%s", os.Getenv("BASE_URL"), filename)
+		trainer.Image = path
 	}
 
 	// Parse time
 	birthday, err := utils.ParseTime(body.Birthday)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	trainer.Name = body.Name
@@ -219,15 +223,13 @@ func UpdateTrainer(c *fiber.Ctx) error {
 	trainer.Specialization = body.Specialization
 	trainer.Achievement = body.Achievement
 
-	fmt.Println(body.Image)
-
 	if err := database.DB.Model(&trainer).Updates(&trainer).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to update trainer",
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(trainer)
+	return c.JSON(trainer)
 }
 
 // DeleteTrainer godoc
@@ -240,7 +242,6 @@ func UpdateTrainer(c *fiber.Ctx) error {
 //	@Param			id	path	int		true	"Trainer ID"
 //	@Success		200	object	string	"Success Delete Trainer Data"
 //	@Failure		404	object	string	"Data not Found!"
-//	@Failure		500	object	string	"Internal Server Error"
 //	@Router			/api/trainer/{id} [delete]
 func DeleteTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -256,7 +257,7 @@ func DeleteTrainer(c *fiber.Ctx) error {
 	}
 	database.DB.Delete(&trainer, id)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	return c.JSON(fiber.Map{
 		"message": "Success Delete Trainer Data",
 	})
 }

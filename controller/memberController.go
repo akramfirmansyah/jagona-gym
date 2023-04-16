@@ -29,7 +29,6 @@ func CreateMember(c *fiber.Ctx) error {
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 			"message": err.Error(),
-			"data":    nil,
 		})
 	}
 
@@ -124,7 +123,7 @@ func UpdateMember(c *fiber.Ctx) error {
 
 	body := new(models.MemberBody)
 	if err := c.BodyParser(body); err != nil {
-		return c.JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
@@ -167,7 +166,6 @@ func UpdateMember(c *fiber.Ctx) error {
 //	@Param			id	path	int		true	"Member ID"
 //	@Success		200	object	string	"Success Delete Member Data"
 //	@Failure		404	object	string	"Data not Found!"
-//	@Failure		500	object	string	"Internal Server Error"
 //	@Router			/api/member/{id} [delete]
 func DeleteMember(c *fiber.Ctx) error {
 	id := c.Params("id")

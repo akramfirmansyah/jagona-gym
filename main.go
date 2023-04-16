@@ -55,5 +55,8 @@ func main() {
 	// Member
 	routers.RegisterMemberRoutes(api.Group("/member"))
 
+	// Equipment
+	routers.RegisterEquipmetRoutes(api.Group("/equipment"))
+
 	_ = app.Listen(":" + os.Getenv("PORT"))
 }

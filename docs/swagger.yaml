@@ -8,6 +8,25 @@ definitions:
         description: Valid is true if Time is not NULL
         type: boolean
     type: object
+  models.Equipment:
+    properties:
+      count:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      img_url:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   models.Member:
     properties:
       address:
@@ -118,6 +137,173 @@ info:
   title: Jagona Gym API
   version: 0.0.1
 paths:
+  /api/equipment:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Equipment'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all equipments
+      tags:
+      - Equipment
+    post:
+      consumes:
+      - multipart/form-data
+      description: Creating new Equipment data
+      parameters:
+      - description: Nama Alat
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Jumlah Alat
+        in: formData
+        name: count
+        required: true
+        type: integer
+      - description: 'Status Alat: ready atau broken'
+        in: formData
+        name: status
+        required: true
+        type: string
+      - description: Foto Alat
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success create equipment
+          schema:
+            $ref: '#/definitions/models.Equipment'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create Equipment
+      tags:
+      - Equipment
+  /api/equipment/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Equipment data by id
+      parameters:
+      - description: Equipment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Delete Equipment Data
+          schema:
+            type: string
+        "404":
+          description: Data not Found!
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete Equipment
+      tags:
+      - Equipment
+    get:
+      consumes:
+      - application/json
+      description: Get a single Equipment data by ID
+      parameters:
+      - description: Equipment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Equipment'
+        "404":
+          description: Equipment not found
+          schema:
+            type: string
+        "500":
+          description: Failed to get equipment
+          schema:
+            type: string
+      summary: Get a single Equipment
+      tags:
+      - Equipment
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update Equipment data by ID
+      parameters:
+      - description: Equipment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Nama Alat
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Jumlah Alat
+        in: formData
+        name: count
+        required: true
+        type: integer
+      - description: 'Status Alat: ready atau broken'
+        in: formData
+        name: status
+        required: true
+        type: string
+      - description: Foto Alat
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success create equipment
+          schema:
+            $ref: '#/definitions/models.Equipment'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update Equipment
+      tags:
+      - Equipment
   /api/member:
     get:
       consumes:
@@ -187,10 +373,6 @@ paths:
             type: string
         "404":
           description: Data not Found!
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
           schema:
             type: string
       summary: Delete Member
@@ -388,10 +570,6 @@ paths:
           description: Data not Found!
           schema:
             type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
       summary: Delete Trainer
       tags:
       - Trainer
@@ -417,7 +595,7 @@ paths:
           schema:
             type: string
         "500":
-          description: Failed to get trainer
+          description: Internal Server Error
           schema:
             type: string
       summary: Get a single Trainer
@@ -436,50 +614,62 @@ paths:
       - description: Name trainer
         in: formData
         name: name
+        required: true
         type: string
       - description: NIK trainer
         in: formData
         name: nik
+        required: true
         type: integer
       - description: Tanggal Lahir trainer
         in: formData
         name: birthday
+        required: true
         type: string
       - description: Email trainer
         in: formData
         name: email
+        required: true
         type: string
       - description: Kontak trainer
         in: formData
         name: contact
+        required: true
         type: string
       - description: Instagram trainer
         in: formData
         name: instagram
+        required: true
         type: string
       - description: Alamat trainer
         in: formData
         name: address
+        required: true
         type: string
       - description: Gender trainer
         in: formData
         name: gender
+        required: true
         type: string
       - description: Deskripsi singkat trainer
         in: formData
         name: description
+        required: true
         type: string
       - description: Pengalaman trainer
         in: formData
         name: experience
+        required: true
         type: string
       - description: Spesialisasi trainer
         in: formData
         name: specialization
+        required: true
         type: string
       - description: Pencapaian/Sertifikasi/Lisensi trainer
         in: formData
         name: achievement
+        required: true
         type: string
       - description: Image trainer
         in: formData
