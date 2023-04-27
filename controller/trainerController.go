@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
@@ -9,6 +10,22 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
+
+type body struct {
+	Name           string `form:"name"`
+	Email          string `form:"email"`
+	Contact        string `form:"contact"`
+	Instagram      string `form:"instagram"`
+	Image          string `form:"image"`
+	Description    string `form:"description"`
+	Specialization string `form:"specialization"`
+	NIK            uint   `form:"nik"`
+	Birthday       string `form:"birthday"`
+	Address        string `form:"address"`
+	Gender         string `form:"gender"`
+	Experience     string `form:"experience"`
+	Achievement    string `form:"achievement"`
+}
 
 // CreateTrainer godoc
 //
@@ -37,7 +54,7 @@ import (
 //	@Failure		500				{string}	string			"Internal Server Error"
 //	@Router			/api/trainer [post]
 func CreateTrainer(c *fiber.Ctx) error {
-	body := new(models.TrainerBody)
+	body := new(body)
 
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -59,6 +76,7 @@ func CreateTrainer(c *fiber.Ctx) error {
 		})
 	}
 
+	fmt.Println(body.Birthday)
 	// Parse time
 	birthday, err := utils.ParseTime(body.Birthday)
 	if err != nil {
@@ -69,21 +87,25 @@ func CreateTrainer(c *fiber.Ctx) error {
 
 	newTrainer := models.Trainer{
 		Name:           body.Name,
-		NIK:            body.NIK,
-		Birthday:       birthday,
 		Email:          body.Email,
 		Contact:        body.Contact,
 		Instagram:      body.Instagram,
-		Address:        body.Address,
-		Gender:         body.Gender,
 		Image:          path,
 		Description:    body.Description,
-		Experience:     body.Experience,
 		Specialization: body.Specialization,
-		Achievement:    body.Achievement,
+		TrainerDetail: models.TrainerDetail{
+			NIK:         body.NIK,
+			Birthday:    birthday,
+			Address:     body.Address,
+			Gender:      body.Gender,
+			Experience:  body.Experience,
+			Achievement: body.Achievement,
+		},
 	}
 
-	if err := database.DB.Create(&newTrainer).Error; err != nil {
+	database.DB.Create(&newTrainer)
+
+	if err := database.DB.Save(&newTrainer).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to create trainer",
 		})
@@ -104,7 +126,7 @@ func CreateTrainer(c *fiber.Ctx) error {
 func GetAllTrainer(c *fiber.Ctx) error {
 	var trainers []models.Trainer
 
-	if err := database.DB.Preload("Members").Find(&trainers).Error; err != nil {
+	if err := database.DB.Find(&trainers).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to get trainer",
 		})
@@ -129,7 +151,7 @@ func GetTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var trainer models.Trainer
-	if err := database.DB.Preload("Members").First(&trainer, id).Error; err != nil {
+	if err := database.DB.Preload("TrainerDetail.Members").Preload("TrainerDetail").First(&trainer, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Trainer not found",
@@ -170,11 +192,12 @@ func GetTrainer(c *fiber.Ctx) error {
 //	@Failure		400				{string}	string	"Bad Request"
 //	@Failure		404				{string}	string	"Trainer not found"
 //	@Failure		500				{string}	string	"Internal Server Error"
-//	@Router			/api/trainer/{id} [put]
+//
+// //	@Router			/api/trainer/{id} [put]
 func UpdateTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	body := new(models.TrainerBody)
+	body := new(body)
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -182,11 +205,19 @@ func UpdateTrainer(c *fiber.Ctx) error {
 	}
 
 	var trainer models.Trainer
-	result := database.DB.Where("id = ?", id).Preload("Members").First(&trainer)
+	result := database.DB.Where("id = ?", id).Preload("TrainerDetail.Members").Preload("TrainerDetail").First(&trainer)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Trainer not found!",
+		})
+	}
+
+	// Parse time
+	birthday, err := utils.ParseTime(body.Birthday)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
 		})
 	}
 
@@ -199,35 +230,30 @@ func UpdateTrainer(c *fiber.Ctx) error {
 			})
 		}
 
-		trainer.Image = path
-	}
-
-	// Parse time
-	birthday, err := utils.ParseTime(body.Birthday)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
+		database.DB.Model(&models.Trainer{}).Where("id = ?", id).Updates(models.Trainer{
+			Image: path,
 		})
 	}
 
-	trainer.Name = body.Name
-	trainer.NIK = body.NIK
-	trainer.Birthday = birthday
-	trainer.Email = body.Email
-	trainer.Contact = body.Contact
-	trainer.Instagram = body.Instagram
-	trainer.Address = body.Address
-	trainer.Gender = body.Gender
-	trainer.Description = body.Description
-	trainer.Experience = body.Experience
-	trainer.Specialization = body.Specialization
-	trainer.Achievement = body.Achievement
+	database.DB.Model(&models.Trainer{}).Where("id = ?", id).Updates(models.Trainer{
+		Name:           body.Name,
+		Email:          body.Email,
+		Contact:        body.Contact,
+		Instagram:      body.Instagram,
+		Description:    body.Description,
+		Specialization: body.Specialization,
+	})
 
-	if err := database.DB.Model(&trainer).Updates(&trainer).Error; err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Failed to update trainer",
-		})
-	}
+	database.DB.Model(&models.TrainerDetail{}).Where("trainer_id = ?", id).Updates(models.TrainerDetail{
+		NIK:         body.NIK,
+		Birthday:    birthday,
+		Address:     body.Address,
+		Gender:      body.Gender,
+		Experience:  body.Experience,
+		Achievement: body.Achievement,
+	})
+
+	database.DB.Where("id = ?", id).Preload("TrainerDetail.Members").Preload("TrainerDetail").First(&trainer)
 
 	return c.JSON(trainer)
 }

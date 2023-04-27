@@ -5,11 +5,10 @@ import (
 
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
+	"github.com/akramfirmansyah/jagona-gym/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
-
-// TODO: fix member Create and Update Controller
 
 // Member godoc
 //
@@ -32,15 +31,25 @@ func CreateMember(c *fiber.Ctx) error {
 		})
 	}
 
+	// Parse time
+	birthday, err := utils.ParseTime(body.Birthday)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
 	member := models.Member{
 		Name:      body.Name,
 		NIK:       body.NIK,
+		Birthday:  birthday,
 		Contact:   body.Contact,
 		Email:     body.Email,
 		Address:   body.Address,
 		Gender:    body.Gender,
 		Weight:    body.Weight,
 		Package:   body.Package,
+		Status:    body.Status,
 		TrainerID: body.TrainerID,
 	}
 
@@ -71,7 +80,7 @@ func GetAllMember(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(member)
+	return c.JSON(member)
 }
 
 // GetMember godoc
@@ -145,6 +154,7 @@ func UpdateMember(c *fiber.Ctx) error {
 	member.Gender = body.Gender
 	member.Weight = body.Weight
 	member.Package = body.Package
+	member.Status = body.Status
 	member.TrainerID = body.TrainerID
 
 	if err := database.DB.Model(&member).Updates(&member).Error; err != nil {

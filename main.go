@@ -49,6 +49,9 @@ func main() {
 
 	api := app.Group("/api")
 
+	// Dashboard
+	routers.RegisterDashboardRoutes(api.Group("/dashboard"))
+
 	// Trainer
 	routers.RegisterTrainerRoutes(api.Group("/trainer"))
 

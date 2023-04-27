@@ -10,8 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// TODO: Create CRUD for Equipment
-
 // Equipemnt godoc
 //
 //	@Summary		Create Equipment

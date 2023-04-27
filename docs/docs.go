@@ -676,144 +676,6 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
-                "description": "Update a specific Trainer data",
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Trainer"
-                ],
-                "summary": "Update Trainer",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Trainer ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Name trainer",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "NIK trainer",
-                        "name": "nik",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Tanggal Lahir trainer",
-                        "name": "birthday",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Email trainer",
-                        "name": "email",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Kontak trainer",
-                        "name": "contact",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Instagram trainer",
-                        "name": "instagram",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Alamat trainer",
-                        "name": "address",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Gender trainer",
-                        "name": "gender",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Deskripsi singkat trainer",
-                        "name": "description",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Pengalaman trainer",
-                        "name": "experience",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Spesialisasi trainer",
-                        "name": "specialization",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Pencapaian/Sertifikasi/Lisensi trainer",
-                        "name": "achievement",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Image trainer",
-                        "name": "image",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Trainer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Trainer not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
             "delete": {
                 "description": "Delete Trainer data by id",
                 "consumes": [
@@ -933,6 +795,9 @@ const docTemplate = `{
                 "package": {
                     "type": "string"
                 },
+                "status": {
+                    "type": "string"
+                },
                 "trainer": {
                     "$ref": "#/definitions/models.Trainer"
                 },
@@ -977,6 +842,9 @@ const docTemplate = `{
                 "package": {
                     "type": "string"
                 },
+                "status": {
+                    "type": "string"
+                },
                 "trainer_id": {
                     "type": "integer"
                 },
@@ -988,15 +856,6 @@ const docTemplate = `{
         "models.Trainer": {
             "type": "object",
             "properties": {
-                "achievement": {
-                    "type": "string"
-                },
-                "address": {
-                    "type": "string"
-                },
-                "birthday": {
-                    "type": "string"
-                },
                 "contact": {
                     "type": "string"
                 },
@@ -1012,12 +871,6 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "experience": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
                 "id": {
                     "type": "integer"
                 },
@@ -1027,20 +880,58 @@ const docTemplate = `{
                 "instagram": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                },
+                "specialization": {
+                    "type": "string"
+                },
+                "trainerDetail": {
+                    "$ref": "#/definitions/models.TrainerDetail"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.TrainerDetail": {
+            "type": "object",
+            "properties": {
+                "achievement": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "experience": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
                 "members": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Member"
                     }
                 },
-                "name": {
-                    "type": "string"
-                },
                 "nik": {
                     "type": "integer"
                 },
-                "specialization": {
-                    "type": "string"
+                "trainerID": {
+                    "type": "integer"
                 },
                 "updatedAt": {
                     "type": "string"

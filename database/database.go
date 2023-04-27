@@ -13,16 +13,19 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
+
 	var err error
 
 	dsn := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PASS") + "@tcp(" + os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=true&loc=Local"
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		// Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		log.Fatal("failed to connect database")
 	}
 }
 
 func Migrate() {
-	_ = DB.AutoMigrate(&models.Trainer{}, &models.Member{}, &models.Equipment{})
+	_ = DB.AutoMigrate(&models.Trainer{}, &models.TrainerDetail{}, &models.Member{}, &models.Equipment{})
 	fmt.Println("Success Migrate Database!")
 }
