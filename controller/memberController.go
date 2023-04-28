@@ -10,6 +10,21 @@ import (
 	"gorm.io/gorm"
 )
 
+type memberRequest struct {
+	Name      string `json:"name"`
+	NIK       uint   `json:"nik"`
+	Birthday  string `json:"birthday"`
+	Email     string `json:"email"`
+	Contact   string `json:"contact"`
+	Instagram string `json:"instagram"`
+	Address   string `json:"address"`
+	Gender    string `json:"gender"`
+	Weight    uint16 `json:"weight"`
+	Package   string `json:"package"`
+	Status    string `json:"status"`
+	TrainerID uint   `json:"trainer_id"`
+}
+
 // Member godoc
 //
 //	@Summary		Create Member
@@ -17,13 +32,13 @@ import (
 //	@Tags			Member
 //	@Accept			json
 //	@Produce		json
-//	@Param			body	body		models.MemberBody	true	"Data member"
-//	@Success		200		{object}	models.Member		"Success create member"
-//	@Failure		400		{string}	string				"Bad Request"
-//	@Failure		500		{string}	string				"Internal Server Error"
+//	@Param			body	body		memberRequest	true	"Data member"
+//	@Success		200		{object}	models.Member	"Success create member"
+//	@Failure		400		{string}	string			"Bad Request"
+//	@Failure		500		{string}	string			"Internal Server Error"
 //	@Router			/api/member [post]
 func CreateMember(c *fiber.Ctx) error {
-	body := new(models.MemberBody)
+	body := new(memberRequest)
 
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
@@ -41,19 +56,24 @@ func CreateMember(c *fiber.Ctx) error {
 
 	member := models.Member{
 		Name:      body.Name,
-		NIK:       body.NIK,
 		Birthday:  birthday,
 		Contact:   body.Contact,
 		Email:     body.Email,
-		Address:   body.Address,
-		Gender:    body.Gender,
-		Weight:    body.Weight,
 		Package:   body.Package,
 		Status:    body.Status,
 		TrainerID: body.TrainerID,
+		MemberDetail: models.MemberDetail{
+			NIK:       body.NIK,
+			Address:   body.Address,
+			Gender:    body.Gender,
+			Weight:    body.Weight,
+			Instagram: body.Instagram,
+		},
 	}
 
-	if err := database.DB.Create(&member).Error; err != nil {
+	database.DB.Create(&member)
+
+	if err := database.DB.Save(&member).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to create member",
 		})
@@ -74,7 +94,7 @@ func CreateMember(c *fiber.Ctx) error {
 func GetAllMember(c *fiber.Ctx) error {
 	var member []models.Member
 
-	if err := database.DB.Preload("Trainer").Find(&member).Error; err != nil {
+	if err := database.DB.Preload("MemberDetail").Preload("Trainer").Find(&member).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to get member",
 		})
@@ -99,7 +119,7 @@ func GetMember(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var member models.Member
-	if err := database.DB.Preload("Trainer").Where("id = ?", id).First(&member).Error; err != nil {
+	if err := database.DB.Preload("MemberDetail").Preload("Trainer").Where("id = ?", id).First(&member).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Member not Found!",
@@ -120,8 +140,8 @@ func GetMember(c *fiber.Ctx) error {
 //	@Tags			Member
 //	@Accept			json
 //	@Produce		json
-//	@Param			id		path		int					true	"Member ID"
-//	@Param			body	body		models.MemberBody	true	"Update Member data"
+//	@Param			id		path		int				true	"Member ID"
+//	@Param			body	body		memberRequest	true	"Update Member data"
 //	@Success		200		{object}	models.Member
 //	@Failure		400		{string}	string	"Bad Request"
 //	@Failure		404		{string}	string	"Member not found"
@@ -130,7 +150,7 @@ func GetMember(c *fiber.Ctx) error {
 func UpdateMember(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	body := new(models.MemberBody)
+	body := new(memberRequest)
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -146,22 +166,32 @@ func UpdateMember(c *fiber.Ctx) error {
 		})
 	}
 
-	member.Name = body.Name
-	member.NIK = body.NIK
-	member.Contact = body.Contact
-	member.Email = body.Email
-	member.Address = body.Address
-	member.Gender = body.Gender
-	member.Weight = body.Weight
-	member.Package = body.Package
-	member.Status = body.Status
-	member.TrainerID = body.TrainerID
-
-	if err := database.DB.Model(&member).Updates(&member).Error; err != nil {
+	birthday, err := utils.ParseTime(body.Birthday)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Failed to update member",
+			"message": err.Error(),
 		})
 	}
+
+	database.DB.Model(&models.Member{}).Where("id = ?", id).Updates(models.Member{
+		Name:      body.Name,
+		Birthday:  birthday,
+		Email:     body.Email,
+		Contact:   body.Contact,
+		Package:   body.Package,
+		Status:    body.Status,
+		TrainerID: body.TrainerID,
+	})
+
+	database.DB.Model(&models.MemberDetail{}).Where("member_id = ?", id).Updates(models.MemberDetail{
+		NIK:       body.NIK,
+		Address:   body.Address,
+		Gender:    body.Gender,
+		Weight:    body.Weight,
+		Instagram: body.Instagram,
+	})
+
+	database.DB.Where("id = ?", id).Preload("MemberDetail").First(&member)
 
 	return c.JSON(member)
 }

@@ -1,5 +1,32 @@
 basePath: /
 definitions:
+  controller.memberRequest:
+    properties:
+      address:
+        type: string
+      birthday:
+        type: string
+      contact:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      instagram:
+        type: string
+      name:
+        type: string
+      nik:
+        type: integer
+      package:
+        type: string
+      status:
+        type: string
+      trainer_id:
+        type: integer
+      weight:
+        type: integer
+    type: object
   gorm.DeletedAt:
     properties:
       time:
@@ -29,8 +56,6 @@ definitions:
     type: object
   models.Member:
     properties:
-      address:
-        type: string
       birthday:
         type: string
       contact:
@@ -39,18 +64,14 @@ definitions:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
+      detail_member:
+        $ref: '#/definitions/models.MemberDetail'
       email:
-        type: string
-      gender:
         type: string
       id:
         type: integer
-      instagram:
-        type: string
       name:
         type: string
-      nik:
-        type: integer
       package:
         type: string
       status:
@@ -61,33 +82,27 @@ definitions:
         type: integer
       updatedAt:
         type: string
-      weight:
-        type: integer
     type: object
-  models.MemberBody:
+  models.MemberDetail:
     properties:
       address:
         type: string
-      birthday:
+      createdAt:
         type: string
-      contact:
-        type: string
-      email:
-        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
       gender:
         type: string
+      id:
+        type: integer
       instagram:
         type: string
-      name:
-        type: string
+      memberID:
+        type: integer
       nik:
         type: integer
-      package:
+      updatedAt:
         type: string
-      status:
-        type: string
-      trainer_id:
-        type: integer
       weight:
         type: integer
     type: object
@@ -353,7 +368,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/models.MemberBody'
+          $ref: '#/definitions/controller.memberRequest'
       produces:
       - application/json
       responses:
@@ -440,7 +455,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/models.MemberBody'
+          $ref: '#/definitions/controller.memberRequest'
       produces:
       - application/json
       responses:

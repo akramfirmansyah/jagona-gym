@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type body struct {
+type trainerRequest struct {
 	Name           string `form:"name"`
 	Email          string `form:"email"`
 	Contact        string `form:"contact"`
@@ -54,7 +54,7 @@ type body struct {
 //	@Failure		500				{string}	string			"Internal Server Error"
 //	@Router			/api/trainer [post]
 func CreateTrainer(c *fiber.Ctx) error {
-	body := new(body)
+	body := new(trainerRequest)
 
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -197,7 +197,7 @@ func GetTrainer(c *fiber.Ctx) error {
 func UpdateTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	body := new(body)
+	body := new(trainerRequest)
 	if err := c.BodyParser(body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),

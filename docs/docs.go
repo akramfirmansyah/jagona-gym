@@ -317,7 +317,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.MemberBody"
+                            "$ref": "#/definitions/controller.memberRequest"
                         }
                     }
                 ],
@@ -412,7 +412,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.MemberBody"
+                            "$ref": "#/definitions/controller.memberRequest"
                         }
                     }
                 ],
@@ -715,6 +715,47 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controller.memberRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "instagram": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nik": {
+                    "type": "integer"
+                },
+                "package": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "trainer_id": {
+                    "type": "integer"
+                },
+                "weight": {
+                    "type": "integer"
+                }
+            }
+        },
         "gorm.DeletedAt": {
             "type": "object",
             "properties": {
@@ -759,9 +800,6 @@ const docTemplate = `{
         "models.Member": {
             "type": "object",
             "properties": {
-                "address": {
-                    "type": "string"
-                },
                 "birthday": {
                     "type": "string"
                 },
@@ -774,23 +812,17 @@ const docTemplate = `{
                 "deletedAt": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
-                "email": {
-                    "type": "string"
+                "detail_member": {
+                    "$ref": "#/definitions/models.MemberDetail"
                 },
-                "gender": {
+                "email": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "instagram": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
-                },
-                "nik": {
-                    "type": "integer"
                 },
                 "package": {
                     "type": "string"
@@ -806,47 +838,38 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
-                },
-                "weight": {
-                    "type": "integer"
                 }
             }
         },
-        "models.MemberBody": {
+        "models.MemberDetail": {
             "type": "object",
             "properties": {
                 "address": {
                     "type": "string"
                 },
-                "birthday": {
+                "createdAt": {
                     "type": "string"
                 },
-                "contact": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
                 },
                 "gender": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "instagram": {
                     "type": "string"
                 },
-                "name": {
-                    "type": "string"
+                "memberID": {
+                    "type": "integer"
                 },
                 "nik": {
                     "type": "integer"
                 },
-                "package": {
+                "updatedAt": {
                     "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "trainer_id": {
-                    "type": "integer"
                 },
                 "weight": {
                     "type": "integer"
