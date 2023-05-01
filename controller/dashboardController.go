@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
+	"github.com/akramfirmansyah/jagona-gym/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -13,6 +14,10 @@ import (
 // - Display jumlah member yang hadir /hari
 
 func GetDashboard(c *fiber.Ctx) error {
+	monthlyNewMembers, err := utils.GetMonthlyNewMembers()
+	if err != nil {
+		return c.JSON(fiber.Map{"error": err.Error()})
+	}
 
 	var memberActive int64
 	if err := database.DB.Model(&models.Member{}).Where("status = ?", "active").Count(&memberActive).Error; err != nil {
@@ -36,11 +41,11 @@ func GetDashboard(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"statistics_new_member":    "default",
-		"statistics_active_member": "default",
-		"present_member":           "default",
-		"active_member":            memberActive,
-		"number_of_trainer":        trainerCount,
-		"number_of_equip":          equipmentCount,
+		"monthly_new_member":    monthlyNewMembers,
+		"monthly_active_member": "default",
+		"present_member":        "default",
+		"active_member":         memberActive,
+		"number_of_trainer":     trainerCount,
+		"number_of_equip":       equipmentCount,
 	})
 }

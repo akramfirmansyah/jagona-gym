@@ -14,6 +14,7 @@ type memberRequest struct {
 	Name      string `json:"name"`
 	NIK       uint   `json:"nik"`
 	Birthday  string `json:"birthday"`
+	JoinDate  string `json:"join_date"`
 	Email     string `json:"email"`
 	Contact   string `json:"contact"`
 	Instagram string `json:"instagram"`
@@ -54,9 +55,17 @@ func CreateMember(c *fiber.Ctx) error {
 		})
 	}
 
+	joinDate, err := utils.ParseTime(body.JoinDate)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
 	member := models.Member{
 		Name:      body.Name,
 		Birthday:  birthday,
+		JoinDate:  joinDate,
 		Contact:   body.Contact,
 		Email:     body.Email,
 		Package:   body.Package,
