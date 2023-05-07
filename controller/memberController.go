@@ -11,19 +11,19 @@ import (
 )
 
 type memberRequest struct {
-	Name      string `json:"name"`
-	NIK       uint   `json:"nik"`
-	Birthday  string `json:"birthday"`
-	JoinDate  string `json:"join_date"`
-	Email     string `json:"email"`
-	Contact   string `json:"contact"`
-	Instagram string `json:"instagram"`
-	Address   string `json:"address"`
-	Gender    string `json:"gender"`
-	Weight    uint16 `json:"weight"`
-	Package   string `json:"package"`
-	Status    string `json:"status"`
-	TrainerID uint   `json:"trainer_id"`
+	Name      string `form:"name"`
+	NIK       uint   `form:"nik"`
+	Birthday  string `form:"birthday"`
+	JoinDate  string `form:"joindate"`
+	Email     string `form:"email"`
+	Contact   string `form:"contact"`
+	Instagram string `form:"instagram"`
+	Address   string `form:"address"`
+	Gender    string `form:"gender"`
+	Weight    uint16 `form:"weight"`
+	Package   string `form:"package"`
+	Status    string `form:"status"`
+	TrainerID uint   `form:"trainer_id"`
 }
 
 // Member godoc
@@ -31,12 +31,26 @@ type memberRequest struct {
 //	@Summary		Create Member
 //	@Description	Creating new Member data
 //	@Tags			Member
-//	@Accept			json
+//	@Accept			mpfd
 //	@Produce		json
-//	@Param			body	body		memberRequest	true	"Data member"
-//	@Success		200		{object}	models.Member	"Success create member"
-//	@Failure		400		{string}	string			"Bad Request"
-//	@Failure		500		{string}	string			"Internal Server Error"
+//
+//	@Param			name		formData	string			true	"Name member"
+//	@Param			nik			formData	integer			true	"NIK member"
+//	@Param			birthday	formData	string			true	"Birthday member"
+//	@Param			joindate	formData	string			true	"Join date member"
+//	@Param			email		formData	string			true	"Email member"
+//	@Param			contact		formData	string			true	"Contact member"
+//	@Param			instagram	formData	string			false	"Instagram member"
+//	@Param			address		formData	string			true	"Address member"
+//	@Param			gender		formData	string			true	"Gender member"	Enums(Male, Female)
+//	@Param			weight		formData	integer			false	"Weight member"
+//	@Param			package		formData	string			true	"Package member"	Enums(bronze, silver, gold, platinum)
+//	@Param			status		formData	string			true	"Status member"		Enums(active, nonactive)
+//	@Param			trainer_id	formData	string			true	"Trainer ID"
+//
+//	@Success		200			{object}	models.Member	"Success create member"
+//	@Failure		400			{string}	string			"Bad Request"
+//	@Failure		500			{string}	string			"Internal Server Error"
 //	@Router			/api/member [post]
 func CreateMember(c *fiber.Ctx) error {
 	body := new(memberRequest)
@@ -103,7 +117,7 @@ func CreateMember(c *fiber.Ctx) error {
 func GetAllMember(c *fiber.Ctx) error {
 	var member []models.Member
 
-	if err := database.DB.Preload("MemberDetail").Preload("Trainer").Find(&member).Error; err != nil {
+	if err := database.DB.Find(&member).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to get member",
 		})
@@ -147,14 +161,28 @@ func GetMember(c *fiber.Ctx) error {
 //	@Summary		Update Member
 //	@Description	Update a specific Member data
 //	@Tags			Member
-//	@Accept			json
+//	@Accept			mpfd
 //	@Produce		json
-//	@Param			id		path		int				true	"Member ID"
-//	@Param			body	body		memberRequest	true	"Update Member data"
-//	@Success		200		{object}	models.Member
-//	@Failure		400		{string}	string	"Bad Request"
-//	@Failure		404		{string}	string	"Member not found"
-//	@Failure		500		{string}	string	"Internal Server Error"
+//
+//	@Param			id			path		integer	true	"ID Member"
+//	@Param			name		formData	string	true	"Name member"
+//	@Param			nik			formData	integer	true	"NIK member"
+//	@Param			birthday	formData	string	true	"Birthday member"
+//	@Param			joindate	formData	string	true	"Join date member"
+//	@Param			email		formData	string	true	"Email member"
+//	@Param			contact		formData	string	true	"Contact member"
+//	@Param			instagram	formData	string	false	"Instagram member"
+//	@Param			address		formData	string	true	"Address member"
+//	@Param			gender		formData	string	true	"Gender member"	Enums(Male, Female)
+//	@Param			weight		formData	integer	false	"Weight member"
+//	@Param			package		formData	string	true	"Package member"	Enums(bronze, silver, gold, platinum)
+//	@Param			status		formData	string	true	"Status member"		Enums(active, nonactive)
+//	@Param			trainer_id	formData	string	true	"Trainer ID"
+//
+//	@Success		200			{object}	models.Member
+//	@Failure		400			{string}	string	"Bad Request"
+//	@Failure		404			{string}	string	"Member not found"
+//	@Failure		500			{string}	string	"Internal Server Error"
 //	@Router			/api/member/{id} [put]
 func UpdateMember(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -182,9 +210,17 @@ func UpdateMember(c *fiber.Ctx) error {
 		})
 	}
 
+	joinDate, err := utils.ParseTime(body.JoinDate)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
 	database.DB.Model(&models.Member{}).Where("id = ?", id).Updates(models.Member{
 		Name:      body.Name,
 		Birthday:  birthday,
+		JoinDate:  joinDate,
 		Email:     body.Email,
 		Contact:   body.Contact,
 		Package:   body.Package,
@@ -221,7 +257,7 @@ func DeleteMember(c *fiber.Ctx) error {
 
 	var member models.Member
 
-	result := database.DB.First(&member, id)
+	result := database.DB.Preload("MemberDetail").First(&member, id)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -229,6 +265,7 @@ func DeleteMember(c *fiber.Ctx) error {
 		})
 	}
 
+	database.DB.Association("MemberDetail").Delete(&member, id)
 	database.DB.Delete(&member, id)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{

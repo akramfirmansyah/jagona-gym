@@ -2,10 +2,12 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Member struct {
-	ID           uint         `gorm:"primarykey"`
+	gorm.Model
 	Name         string       `gorm:"index;size:255" json:"name"`
 	Birthday     time.Time    `gorm:"type:date" json:"birthday"`
 	JoinDate     time.Time    `gorm:"type:date" json:"join_date"`

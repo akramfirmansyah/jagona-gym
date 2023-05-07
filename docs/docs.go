@@ -301,7 +301,7 @@ const docTemplate = `{
             "post": {
                 "description": "Creating new Member data",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -312,13 +312,107 @@ const docTemplate = `{
                 "summary": "Create Member",
                 "parameters": [
                     {
-                        "description": "Data member",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controller.memberRequest"
-                        }
+                        "type": "string",
+                        "description": "Name member",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "NIK member",
+                        "name": "nik",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Birthday member",
+                        "name": "birthday",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Join date member",
+                        "name": "joindate",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email member",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Contact member",
+                        "name": "contact",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Instagram member",
+                        "name": "instagram",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Address member",
+                        "name": "address",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "Male",
+                            "Female"
+                        ],
+                        "type": "string",
+                        "description": "Gender member",
+                        "name": "gender",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Weight member",
+                        "name": "weight",
+                        "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "bronze",
+                            "silver",
+                            "gold",
+                            "platinum"
+                        ],
+                        "type": "string",
+                        "description": "Package member",
+                        "name": "package",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "active",
+                            "nonactive"
+                        ],
+                        "type": "string",
+                        "description": "Status member",
+                        "name": "status",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Trainer ID",
+                        "name": "trainer_id",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -389,7 +483,7 @@ const docTemplate = `{
             "put": {
                 "description": "Update a specific Member data",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -401,19 +495,113 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Member ID",
+                        "description": "ID Member",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Update Member data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/controller.memberRequest"
-                        }
+                        "type": "string",
+                        "description": "Name member",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "NIK member",
+                        "name": "nik",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Birthday member",
+                        "name": "birthday",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Join date member",
+                        "name": "joindate",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email member",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Contact member",
+                        "name": "contact",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Instagram member",
+                        "name": "instagram",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Address member",
+                        "name": "address",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "Male",
+                            "Female"
+                        ],
+                        "type": "string",
+                        "description": "Gender member",
+                        "name": "gender",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Weight member",
+                        "name": "weight",
+                        "in": "formData"
+                    },
+                    {
+                        "enum": [
+                            "bronze",
+                            "silver",
+                            "gold",
+                            "platinum"
+                        ],
+                        "type": "string",
+                        "description": "Package member",
+                        "name": "package",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "active",
+                            "nonactive"
+                        ],
+                        "type": "string",
+                        "description": "Status member",
+                        "name": "status",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Trainer ID",
+                        "name": "trainer_id",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -539,7 +727,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Tanggal Lahir trainer",
+                        "description": "Tanggal Lahir trainer. example: 2006-01-02",
                         "name": "birthday",
                         "in": "formData",
                         "required": true
@@ -572,6 +760,10 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "enum": [
+                            "Male",
+                            "Female"
+                        ],
                         "type": "string",
                         "description": "Gender trainer",
                         "name": "gender",
@@ -676,6 +868,148 @@ const docTemplate = `{
                     }
                 }
             },
+            "put": {
+                "description": "Update a specific Trainer data",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Trainer"
+                ],
+                "summary": "Update Trainer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Trainer ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Name trainer",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "NIK trainer",
+                        "name": "nik",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Tanggal Lahir trainer. example: 2006-01-02",
+                        "name": "birthday",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email trainer",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Kontak trainer",
+                        "name": "contact",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Instagram trainer",
+                        "name": "instagram",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Alamat trainer",
+                        "name": "address",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "Male",
+                            "Female"
+                        ],
+                        "type": "string",
+                        "description": "Gender trainer",
+                        "name": "gender",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Deskripsi singkat trainer",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pengalaman trainer",
+                        "name": "experience",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Spesialisasi trainer",
+                        "name": "specialization",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Pencapaian/Sertifikasi/Lisensi trainer",
+                        "name": "achievement",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image trainer",
+                        "name": "image",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Trainer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Trainer not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete Trainer data by id",
                 "consumes": [
@@ -715,47 +1049,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controller.memberRequest": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "birthday": {
-                    "type": "string"
-                },
-                "contact": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "instagram": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "nik": {
-                    "type": "integer"
-                },
-                "package": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "trainer_id": {
-                    "type": "integer"
-                },
-                "weight": {
-                    "type": "integer"
-                }
-            }
-        },
         "gorm.DeletedAt": {
             "type": "object",
             "properties": {
@@ -820,6 +1113,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "join_date": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -974,6 +1270,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "This is a swagger for Jagona Gym API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

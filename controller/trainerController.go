@@ -37,12 +37,12 @@ type trainerRequest struct {
 //
 //	@Param			name			formData	string			true	"Name trainer"
 //	@Param			nik				formData	integer			true	"NIK trainer"
-//	@Param			birthday		formData	string			true	"Tanggal Lahir trainer"
+//	@Param			birthday		formData	string			true	"Tanggal Lahir trainer. example: 2006-01-02"
 //	@Param			email			formData	string			true	"Email trainer"
 //	@Param			contact			formData	string			true	"Kontak trainer"
 //	@Param			instagram		formData	string			false	"Instagram trainer"
 //	@Param			address			formData	string			true	"Alamat trainer"
-//	@Param			gender			formData	string			true	"Gender trainer"
+//	@Param			gender			formData	string			true	"Gender trainer"	Enums(Male, Female)
 //	@Param			description		formData	string			false	"Deskripsi singkat trainer"
 //	@Param			experience		formData	string			false	"Pengalaman trainer"
 //	@Param			specialization	formData	string			true	"Spesialisasi trainer"
@@ -176,12 +176,12 @@ func GetTrainer(c *fiber.Ctx) error {
 //	@Param			id				path		int		true	"Trainer ID"
 //	@Param			name			formData	string	true	"Name trainer"
 //	@Param			nik				formData	integer	true	"NIK trainer"
-//	@Param			birthday		formData	string	true	"Tanggal Lahir trainer"
+//	@Param			birthday		formData	string	true	"Tanggal Lahir trainer. example: 2006-01-02"
 //	@Param			email			formData	string	true	"Email trainer"
 //	@Param			contact			formData	string	true	"Kontak trainer"
 //	@Param			instagram		formData	string	true	"Instagram trainer"
 //	@Param			address			formData	string	true	"Alamat trainer"
-//	@Param			gender			formData	string	true	"Gender trainer"
+//	@Param			gender			formData	string	true	"Gender trainer"	Enums(Male, Female)
 //	@Param			description		formData	string	true	"Deskripsi singkat trainer"
 //	@Param			experience		formData	string	true	"Pengalaman trainer"
 //	@Param			specialization	formData	string	true	"Spesialisasi trainer"
@@ -193,7 +193,7 @@ func GetTrainer(c *fiber.Ctx) error {
 //	@Failure		404				{string}	string	"Trainer not found"
 //	@Failure		500				{string}	string	"Internal Server Error"
 //
-// //	@Router			/api/trainer/{id} [put]
+//	@Router			/api/trainer/{id} [put]
 func UpdateTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
 
