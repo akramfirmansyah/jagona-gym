@@ -16,7 +16,7 @@ func SaveFileTrainer(c *fiber.Ctx, file *multipart.FileHeader) (string, error) {
 	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
 
 	// Save file to disk
-	if err := c.SaveFile(file, fmt.Sprintf("public/trainer/%s", filename)); err != nil {
+	if err := c.SaveFile(file, fmt.Sprintf("storage/trainer/%s", filename)); err != nil {
 		return "", err
 	}
 
@@ -32,7 +32,7 @@ func SaveFileEquipment(c *fiber.Ctx, file *multipart.FileHeader) (string, error)
 	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
 
 	// Save file to disk
-	if err := c.SaveFile(file, fmt.Sprintf("public/equipment/%s", filename)); err != nil {
+	if err := c.SaveFile(file, fmt.Sprintf("storage/equipment/%s", filename)); err != nil {
 		return "", err
 	}
 
