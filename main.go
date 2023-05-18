@@ -23,13 +23,13 @@ func init() {
 	database.Migrate()
 }
 
-//	@title			Jagona Gym API
-//	@version		0.0.1
-//	@description	This is a swagger for Jagona Gym API
-//	@contact.name	API Support
-//	@contact.email	akram.firman@gmail.com
-//	@host			localhost:8080
-//	@BasePath		/
+// @title			Jagona Gym API
+// @version		0.0.1
+// @description	This is a swagger for Jagona Gym API
+// @contact.name	API Support
+// @contact.email	akram.firman@gmail.com
+// @host			localhost:8080
+// @BasePath		/
 func main() {
 	app := fiber.New(fiber.Config{
 		AppName:     "Jagona Gym API v0.0.1",
@@ -39,7 +39,7 @@ func main() {
 
 	app.Use(logger.New())
 	app.Use(cors.New())
-	app.Static("/images", "./public")
+	app.Static("/images", "./storage")
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Jagona Gym Project")

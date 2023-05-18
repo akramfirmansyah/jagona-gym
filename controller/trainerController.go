@@ -2,7 +2,6 @@ package controller
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
@@ -13,18 +12,18 @@ import (
 
 type trainerRequest struct {
 	Name           string `form:"name"`
+	NIK            string `form:"nik"`
+	Birthday       string `form:"birthday"`
 	Email          string `form:"email"`
 	Contact        string `form:"contact"`
+	Address        string `form:"address"`
 	Instagram      string `form:"instagram"`
-	Image          string `form:"image"`
+	Gender         string `form:"gender"`
 	Description    string `form:"description"`
 	Specialization string `form:"specialization"`
-	NIK            uint   `form:"nik"`
-	Birthday       string `form:"birthday"`
-	Address        string `form:"address"`
-	Gender         string `form:"gender"`
 	Experience     string `form:"experience"`
 	Achievement    string `form:"achievement"`
+	Image          string `form:"image"`
 }
 
 // CreateTrainer godoc
@@ -76,15 +75,6 @@ func CreateTrainer(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(body.Birthday)
-	// Parse time
-	birthday, err := utils.ParseTime(body.Birthday)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-
 	newTrainer := models.Trainer{
 		Name:           body.Name,
 		Email:          body.Email,
@@ -95,7 +85,7 @@ func CreateTrainer(c *fiber.Ctx) error {
 		Specialization: body.Specialization,
 		TrainerDetail: models.TrainerDetail{
 			NIK:         body.NIK,
-			Birthday:    birthday,
+			Birthday:    body.Birthday,
 			Address:     body.Address,
 			Gender:      body.Gender,
 			Experience:  body.Experience,
@@ -103,9 +93,7 @@ func CreateTrainer(c *fiber.Ctx) error {
 		},
 	}
 
-	database.DB.Create(&newTrainer)
-
-	if err := database.DB.Save(&newTrainer).Error; err != nil {
+	if err := database.DB.Create(&newTrainer).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to create trainer",
 		})
@@ -213,14 +201,6 @@ func UpdateTrainer(c *fiber.Ctx) error {
 		})
 	}
 
-	// Parse time
-	birthday, err := utils.ParseTime(body.Birthday)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-
 	file, err := c.FormFile("image")
 	if file != nil && err == nil {
 		path, err := utils.SaveFileTrainer(c, file)
@@ -246,7 +226,7 @@ func UpdateTrainer(c *fiber.Ctx) error {
 
 	database.DB.Model(&models.TrainerDetail{}).Where("trainer_id = ?", id).Updates(models.TrainerDetail{
 		NIK:         body.NIK,
-		Birthday:    birthday,
+		Birthday:    body.Birthday,
 		Address:     body.Address,
 		Gender:      body.Gender,
 		Experience:  body.Experience,
