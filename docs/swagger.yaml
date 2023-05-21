@@ -75,7 +75,7 @@ definitions:
       memberID:
         type: integer
       nik:
-        type: integer
+        type: string
       updatedAt:
         type: string
       weight:
@@ -131,7 +131,7 @@ definitions:
           $ref: '#/definitions/models.Member'
         type: array
       nik:
-        type: integer
+        type: string
       trainerID:
         type: integer
       updatedAt:
@@ -347,7 +347,7 @@ paths:
         in: formData
         name: nik
         required: true
-        type: integer
+        type: string
       - description: Birthday member
         in: formData
         name: birthday
@@ -502,7 +502,7 @@ paths:
         in: formData
         name: nik
         required: true
-        type: integer
+        type: string
       - description: Birthday member
         in: formData
         name: birthday

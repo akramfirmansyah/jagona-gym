@@ -12,7 +12,7 @@ import (
 
 type memberRequest struct {
 	Name      string `form:"name"`
-	NIK       uint   `form:"nik"`
+	NIK       string `form:"nik"`
 	Birthday  string `form:"birthday"`
 	JoinDate  string `form:"joindate"`
 	Email     string `form:"email"`
@@ -35,7 +35,7 @@ type memberRequest struct {
 //	@Produce		json
 //
 //	@Param			name		formData	string			true	"Name member"
-//	@Param			nik			formData	integer			true	"NIK member"
+//	@Param			nik			formData	string			true	"NIK member"
 //	@Param			birthday	formData	string			true	"Birthday member"
 //	@Param			joindate	formData	string			true	"Join date member"
 //	@Param			email		formData	string			true	"Email member"
@@ -166,7 +166,7 @@ func GetMember(c *fiber.Ctx) error {
 //
 //	@Param			id			path		integer	true	"ID Member"
 //	@Param			name		formData	string	true	"Name member"
-//	@Param			nik			formData	integer	true	"NIK member"
+//	@Param			nik			formData	string	true	"NIK member"
 //	@Param			birthday	formData	string	true	"Birthday member"
 //	@Param			joindate	formData	string	true	"Join date member"
 //	@Param			email		formData	string	true	"Email member"

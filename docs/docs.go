@@ -319,7 +319,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "NIK member",
                         "name": "nik",
                         "in": "formData",
@@ -508,7 +508,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "NIK member",
                         "name": "nik",
                         "in": "formData",
@@ -1162,7 +1162,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "nik": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
@@ -1247,7 +1247,7 @@ const docTemplate = `{
                     }
                 },
                 "nik": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "trainerID": {
                     "type": "integer"

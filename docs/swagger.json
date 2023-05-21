@@ -312,7 +312,7 @@
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "NIK member",
                         "name": "nik",
                         "in": "formData",
@@ -501,7 +501,7 @@
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "NIK member",
                         "name": "nik",
                         "in": "formData",
@@ -1155,7 +1155,7 @@
                     "type": "integer"
                 },
                 "nik": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
@@ -1240,7 +1240,7 @@
                     }
                 },
                 "nik": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "trainerID": {
                     "type": "integer"
