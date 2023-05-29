@@ -5,7 +5,6 @@ import (
 
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
-	"github.com/akramfirmansyah/jagona-gym/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -61,37 +60,20 @@ func CreateMember(c *fiber.Ctx) error {
 		})
 	}
 
-	// Parse time
-	birthday, err := utils.ParseTime(body.Birthday)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-
-	joinDate, err := utils.ParseTime(body.JoinDate)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-
 	member := models.Member{
-		Name:      body.Name,
-		Birthday:  birthday,
-		JoinDate:  joinDate,
-		Contact:   body.Contact,
-		Email:     body.Email,
-		Package:   body.Package,
-		Status:    body.Status,
-		TrainerID: body.TrainerID,
-		MemberDetail: models.MemberDetail{
-			NIK:       body.NIK,
-			Address:   body.Address,
-			Gender:    body.Gender,
-			Weight:    body.Weight,
-			Instagram: body.Instagram,
-		},
+		Name:         body.Name,
+		Birthday:     body.Birthday,
+		JoinDate:     body.JoinDate,
+		Contact:      body.Contact,
+		Email:        body.Email,
+		Package:      body.Package,
+		Status:       body.Status,
+		TrainerRefer: body.TrainerID,
+		NIK:          body.NIK,
+		Address:      body.Address,
+		Gender:       body.Gender,
+		Weight:       body.Weight,
+		Instagram:    body.Instagram,
 	}
 
 	database.DB.Create(&member)
@@ -142,7 +124,7 @@ func GetMember(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var member models.Member
-	if err := database.DB.Preload("MemberDetail").Preload("Trainer").Where("id = ?", id).First(&member).Error; err != nil {
+	if err := database.DB.Preload("Trainer").Where("id = ?", id).First(&member).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Member not Found!",
@@ -203,40 +185,23 @@ func UpdateMember(c *fiber.Ctx) error {
 		})
 	}
 
-	birthday, err := utils.ParseTime(body.Birthday)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-
-	joinDate, err := utils.ParseTime(body.JoinDate)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-		})
-	}
-
 	database.DB.Model(&models.Member{}).Where("id = ?", id).Updates(models.Member{
 		Name:      body.Name,
-		Birthday:  birthday,
-		JoinDate:  joinDate,
+		Birthday:  body.Birthday,
+		JoinDate:  body.JoinDate,
 		Email:     body.Email,
 		Contact:   body.Contact,
 		Package:   body.Package,
 		Status:    body.Status,
-		TrainerID: body.TrainerID,
-	})
-
-	database.DB.Model(&models.MemberDetail{}).Where("member_id = ?", id).Updates(models.MemberDetail{
 		NIK:       body.NIK,
 		Address:   body.Address,
 		Gender:    body.Gender,
 		Weight:    body.Weight,
 		Instagram: body.Instagram,
+		// TrainerRefer: body.TrainerID,
 	})
 
-	database.DB.Where("id = ?", id).Preload("MemberDetail").First(&member)
+	database.DB.Where("id = ?", id).First(&member)
 
 	return c.JSON(member)
 }
@@ -257,7 +222,7 @@ func DeleteMember(c *fiber.Ctx) error {
 
 	var member models.Member
 
-	result := database.DB.Preload("MemberDetail").First(&member, id)
+	result := database.DB.First(&member, id)
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -265,7 +230,6 @@ func DeleteMember(c *fiber.Ctx) error {
 		})
 	}
 
-	database.DB.Association("MemberDetail").Delete(&member, id)
 	database.DB.Delete(&member, id)
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{

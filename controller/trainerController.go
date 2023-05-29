@@ -8,6 +8,7 @@ import (
 	"github.com/akramfirmansyah/jagona-gym/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type trainerRequest struct {
@@ -139,7 +140,7 @@ func GetTrainer(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var trainer models.Trainer
-	if err := database.DB.Preload("TrainerDetail.Members").Preload("TrainerDetail").First(&trainer, id).Error; err != nil {
+	if err := database.DB.Preload("TrainerDetail").First(&trainer, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Trainer not found",
@@ -261,7 +262,7 @@ func DeleteTrainer(c *fiber.Ctx) error {
 			"message": "Data not Found!",
 		})
 	}
-	database.DB.Delete(&trainer, id)
+	database.DB.Select(clause.Associations).Delete(&trainer, id)
 
 	return c.JSON(fiber.Map{
 		"message": "Success Delete Trainer Data",
