@@ -668,6 +668,212 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/schedule": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Get all schedules",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Schedule"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new Schedule data",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Create Schedule",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Title or name Schedule",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Is Schedule for all day?",
+                        "name": "isallday",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start time schedule",
+                        "name": "start_time",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "End time schedule",
+                        "name": "end_time",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success create schedule",
+                        "schema": {
+                            "$ref": "#/definitions/models.Schedule"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/schedule/{id}": {
+            "put": {
+                "description": "Update new Schedule data",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Update Schedule",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Schedule ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Title or name Schedule",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Is Schedule for all day?",
+                        "name": "isallday",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Start time schedule",
+                        "name": "start_time",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "End time schedule",
+                        "name": "end_time",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success update schedule",
+                        "schema": {
+                            "$ref": "#/definitions/models.Schedule"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Schedule not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Schedule data by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Delete Schedule",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Schedule ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Delete schedule",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Data not Found!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/trainer": {
             "get": {
                 "consumes": [
@@ -1093,6 +1299,9 @@ const docTemplate = `{
         "models.Member": {
             "type": "object",
             "properties": {
+                "address": {
+                    "type": "string"
+                },
                 "birthday": {
                     "type": "string"
                 },
@@ -1105,19 +1314,25 @@ const docTemplate = `{
                 "deletedAt": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
-                "detail_member": {
-                    "$ref": "#/definitions/models.MemberDetail"
-                },
                 "email": {
+                    "type": "string"
+                },
+                "gender": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
+                "instagram": {
+                    "type": "string"
+                },
                 "join_date": {
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "nik": {
                     "type": "string"
                 },
                 "package": {
@@ -1134,41 +1349,38 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "weight": {
+                    "type": "integer"
                 }
             }
         },
-        "models.MemberDetail": {
+        "models.Schedule": {
             "type": "object",
             "properties": {
-                "address": {
-                    "type": "string"
-                },
                 "createdAt": {
                     "type": "string"
                 },
                 "deletedAt": {
                     "$ref": "#/definitions/gorm.DeletedAt"
                 },
-                "gender": {
+                "end_time": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "instagram": {
+                "is_all_day": {
+                    "type": "boolean"
+                },
+                "start_time": {
                     "type": "string"
                 },
-                "memberID": {
-                    "type": "integer"
-                },
-                "nik": {
+                "title": {
                     "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
-                },
-                "weight": {
-                    "type": "integer"
                 }
             }
         },
@@ -1239,12 +1451,6 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
-                },
-                "members": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Member"
-                    }
                 },
                 "nik": {
                     "type": "string"

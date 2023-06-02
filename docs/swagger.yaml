@@ -29,6 +29,8 @@ definitions:
     type: object
   models.Member:
     properties:
+      address:
+        type: string
       birthday:
         type: string
       contact:
@@ -37,15 +39,19 @@ definitions:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
-      detail_member:
-        $ref: '#/definitions/models.MemberDetail'
       email:
+        type: string
+      gender:
         type: string
       id:
         type: integer
+      instagram:
+        type: string
       join_date:
         type: string
       name:
+        type: string
+      nik:
         type: string
       package:
         type: string
@@ -57,29 +63,27 @@ definitions:
         type: integer
       updatedAt:
         type: string
+      weight:
+        type: integer
     type: object
-  models.MemberDetail:
+  models.Schedule:
     properties:
-      address:
-        type: string
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
-      gender:
+      end_time:
         type: string
       id:
         type: integer
-      instagram:
+      is_all_day:
+        type: boolean
+      start_time:
         type: string
-      memberID:
-        type: integer
-      nik:
+      title:
         type: string
       updatedAt:
         type: string
-      weight:
-        type: integer
     type: object
   models.Trainer:
     properties:
@@ -126,10 +130,6 @@ definitions:
         type: string
       id:
         type: integer
-      members:
-        items:
-          $ref: '#/definitions/models.Member'
-        type: array
       nik:
         type: string
       trainerID:
@@ -589,6 +589,144 @@ paths:
       summary: Update Member
       tags:
       - Member
+  /api/schedule:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Schedule'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all schedules
+      tags:
+      - Schedule
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create new Schedule data
+      parameters:
+      - description: Title or name Schedule
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Is Schedule for all day?
+        in: formData
+        name: isallday
+        type: string
+      - description: Start time schedule
+        in: formData
+        name: start_time
+        required: true
+        type: string
+      - description: End time schedule
+        in: formData
+        name: end_time
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success create schedule
+          schema:
+            $ref: '#/definitions/models.Schedule'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create Schedule
+      tags:
+      - Schedule
+  /api/schedule/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Schedule data by id
+      parameters:
+      - description: Schedule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success Delete schedule
+          schema:
+            type: string
+        "404":
+          description: Data not Found!
+          schema:
+            type: string
+      summary: Delete Schedule
+      tags:
+      - Schedule
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update new Schedule data
+      parameters:
+      - description: Schedule ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Title or name Schedule
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Is Schedule for all day?
+        in: formData
+        name: isallday
+        type: string
+      - description: Start time schedule
+        in: formData
+        name: start_time
+        required: true
+        type: string
+      - description: End time schedule
+        in: formData
+        name: end_time
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success update schedule
+          schema:
+            $ref: '#/definitions/models.Schedule'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Schedule not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update Schedule
+      tags:
+      - Schedule
   /api/trainer:
     get:
       consumes:

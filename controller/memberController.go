@@ -99,7 +99,7 @@ func CreateMember(c *fiber.Ctx) error {
 func GetAllMember(c *fiber.Ctx) error {
 	var member []models.Member
 
-	if err := database.DB.Find(&member).Error; err != nil {
+	if err := database.DB.Preload("Trainer").Find(&member).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to get member",
 		})

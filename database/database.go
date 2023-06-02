@@ -26,6 +26,6 @@ func ConnectDB() {
 }
 
 func Migrate() {
-	_ = DB.AutoMigrate(&models.Trainer{}, &models.TrainerDetail{}, &models.Member{}, &models.Equipment{})
+	_ = DB.AutoMigrate(&models.Trainer{}, &models.TrainerDetail{}, &models.Member{}, &models.Equipment{}, &models.Schedule{})
 	fmt.Println("Success Migrate Database!")
 }

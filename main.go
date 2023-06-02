@@ -61,5 +61,8 @@ func main() {
 	// Equipment
 	routers.RegisterEquipmetRoutes(api.Group("/equipment"))
 
+	// Schedule
+	routers.RegisterScheduleRoutes(api.Group("/schedule"))
+
 	_ = app.Listen(":" + os.Getenv("PORT"))
 }
