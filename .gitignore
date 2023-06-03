@@ -1,6 +1,7 @@
 .env
 .air.toml
 diagram.vuerd.json
+*.http
 
 .idea/
 tmp/

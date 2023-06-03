@@ -6,6 +6,6 @@ type Schedule struct {
 	gorm.Model
 	Title     string `json:"title"`
 	IsAllDay  bool   `json:"is_all_day"`
-	StartTime string `gorm:"datetime" json:"start_time"`
-	EndTime   string `gorm:"datetime" json:"end_time"`
+	StartTime string `gorm:"type:datetime" json:"start_time"`
+	EndTime   string `gorm:"type:datetime" json:"end_time"`
 }
