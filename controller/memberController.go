@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/akramfirmansyah/jagona-gym/database"
 	"github.com/akramfirmansyah/jagona-gym/models"
@@ -76,9 +77,7 @@ func CreateMember(c *fiber.Ctx) error {
 		Instagram:    body.Instagram,
 	}
 
-	database.DB.Create(&member)
-
-	if err := database.DB.Save(&member).Error; err != nil {
+	if err := database.DB.Create(&member).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to create member",
 		})
@@ -99,13 +98,31 @@ func CreateMember(c *fiber.Ctx) error {
 func GetAllMember(c *fiber.Ctx) error {
 	var member []models.Member
 
-	if err := database.DB.Preload("Trainer").Find(&member).Error; err != nil {
+	var limit int = 10
+	var offset int = 0
+
+	if c.Query("limit") != "" {
+		temp, _ := strconv.Atoi(c.Query("limit"))
+		limit = temp
+	}
+
+	if c.Query("page") != "" {
+		temp, _ := strconv.Atoi(c.Query("page"))
+		offset = limit * (temp - 1)
+	}
+
+	result := database.DB.Offset(offset).Limit(limit).Preload("Trainer").Find(&member)
+
+	if err := result.Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Failed to get member",
 		})
 	}
 
-	return c.JSON(member)
+	return c.JSON(fiber.Map{
+		"data":  member,
+		"count": result.RowsAffected,
+	})
 }
 
 // GetMember godoc
