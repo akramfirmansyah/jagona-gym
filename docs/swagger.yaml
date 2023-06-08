@@ -1,4 +1,3 @@
-basePath: /
 definitions:
   gorm.DeletedAt:
     properties:
@@ -137,14 +136,13 @@ definitions:
       updatedAt:
         type: string
     type: object
-host: localhost:8080
 info:
   contact:
     email: akram.firman@gmail.com
     name: API Support
   description: This is a swagger for Jagona Gym API
   title: Jagona Gym API
-  version: 0.0.1
+  version: 0.1.0
 paths:
   /api/equipment:
     get:
@@ -317,6 +315,19 @@ paths:
     get:
       consumes:
       - application/json
+      parameters:
+      - description: Search member by given value
+        in: query
+        name: search
+        type: string
+      - description: 'pagination (default: 1)'
+        in: query
+        name: page
+        type: string
+      - description: Number of members shown
+        in: query
+        name: limit
+        type: string
       produces:
       - application/json
       responses:
@@ -986,4 +997,10 @@ paths:
       summary: Update Trainer
       tags:
       - Trainer
+securityDefinitions:
+  ApiKeyAuth:
+    description: Auth protects our entity endpoints
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

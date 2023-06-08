@@ -26,13 +26,16 @@ func init() {
 	database.Seeder()
 }
 
-//	@title			Jagona Gym API
-//	@version		0.1.0
-//	@description	This is a swagger for Jagona Gym API
-//	@contact.name	API Support
-//	@contact.email	akram.firman@gmail.com
-//	@host			localhost:8080
-//	@BasePath		/
+//	@title						Jagona Gym API
+//	@version					0.1.0
+//	@description				This is a swagger for Jagona Gym API
+//	@contact.name				API Support
+//	@contact.email				akram.firman@gmail.com
+//
+//	@securityDefinitions.apikey	ApiKeyAuth
+//
+//	@host						localhost:8080
+//	@BasePath					/
 func main() {
 	app := fiber.New(fiber.Config{
 		AppName:     "Jagona Gym API v0.0.1",

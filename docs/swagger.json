@@ -7,10 +7,8 @@
             "name": "API Support",
             "email": "akram.firman@gmail.com"
         },
-        "version": "0.0.1"
+        "version": "0.1.0"
     },
-    "host": "localhost:8080",
-    "basePath": "/",
     "paths": {
         "/api/equipment": {
             "get": {
@@ -273,6 +271,26 @@
                     "Member"
                 ],
                 "summary": "Get all members",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search member by given value",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagination (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Number of members shown",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1455,6 +1473,14 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "Auth protects our entity endpoints",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

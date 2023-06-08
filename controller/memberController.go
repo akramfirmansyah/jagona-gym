@@ -92,8 +92,13 @@ func CreateMember(c *fiber.Ctx) error {
 //	@Tags		Member
 //	@Accept		json
 //	@Produce	json
-//	@Success	200	{array}		models.Member
-//	@Failure	500	{string}	string	"Internal Server Error"
+//
+//	@Param		search	query		string	false	"Search member by given value"
+//	@Param		page	query		string	false	"pagination (default: 1)"
+//	@Param		limit	query		string	false	"Number of members shown"
+//
+//	@Success	200		{array}		models.Member
+//	@Failure	500		{string}	string	"Internal Server Error"
 //	@Router		/api/member [get]
 func GetAllMember(c *fiber.Ctx) error {
 	var member []models.Member
@@ -111,7 +116,7 @@ func GetAllMember(c *fiber.Ctx) error {
 		offset = limit * (temp - 1)
 	}
 
-	result := database.DB.Offset(offset).Limit(limit).Preload("Trainer").Find(&member)
+	result := database.DB.Where("name LIKE ?", ("%" + c.Query("search") + "%")).Offset(offset).Limit(limit).Preload("Trainer").Find(&member)
 
 	if err := result.Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

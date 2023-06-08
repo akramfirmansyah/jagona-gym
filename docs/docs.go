@@ -280,6 +280,26 @@ const docTemplate = `{
                     "Member"
                 ],
                 "summary": "Get all members",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search member by given value",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "pagination (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Number of members shown",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1463,14 +1483,22 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "Auth protects our entity endpoints",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "0.0.1",
-	Host:             "localhost:8080",
-	BasePath:         "/",
+	Version:          "0.1.0",
+	Host:             "",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Jagona Gym API",
 	Description:      "This is a swagger for Jagona Gym API",
