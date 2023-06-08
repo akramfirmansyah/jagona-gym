@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 
+	"github.com/akramfirmansyah/jagona-gym/controller"
+	"github.com/akramfirmansyah/jagona-gym/middlewares"
 	"github.com/akramfirmansyah/jagona-gym/routers"
 	"github.com/gofiber/swagger"
 
@@ -21,10 +23,11 @@ func init() {
 	utils.LoadEnv()
 	database.ConnectDB()
 	database.Migrate()
+	database.Seeder()
 }
 
 //	@title			Jagona Gym API
-//	@version		0.0.1
+//	@version		0.1.0
 //	@description	This is a swagger for Jagona Gym API
 //	@contact.name	API Support
 //	@contact.email	akram.firman@gmail.com
@@ -46,8 +49,12 @@ func main() {
 	})
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
+	app.Post("/login", controller.Login)
 
-	api := app.Group("/api")
+	api := app.Group("/api", middlewares.Protected())
+
+	// User
+	routers.RegisterUserRoutes(api.Group("/user"))
 
 	// Dashboard
 	routers.RegisterDashboardRoutes(api.Group("/dashboard"))
