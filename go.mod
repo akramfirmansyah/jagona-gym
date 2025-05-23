@@ -5,14 +5,14 @@ go 1.23.0
 toolchain go1.23.2
 
 require (
-	github.com/go-sql-driver/mysql v1.9.1
-	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/go-sql-driver/mysql v1.9.2
+	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/gofiber/swagger v1.1.1
 	github.com/json-iterator/go v1.1.12
 	github.com/swaggo/swag v1.16.4
-	golang.org/x/crypto v0.36.0
+	golang.org/x/crypto v0.38.0
 	gorm.io/driver/mysql v1.5.7
-	gorm.io/gorm v1.25.12
+	gorm.io/gorm v1.26.1
 )
 
 require (
@@ -30,8 +30,8 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/swaggo/files/v2 v2.0.2 // indirect
-	golang.org/x/text v0.23.0 // indirect
-	golang.org/x/tools v0.31.0 // indirect
+	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/tools v0.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
@@ -47,6 +47,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.59.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	github.com/valyala/fasthttp v1.62.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 )
