@@ -1,0 +1,11 @@
+services:
+  db:
+    image: mysql:9
+    container_name: jagonagym-mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=jagonagym
+    ports:
+      - "3306:3306"
+  
+    
